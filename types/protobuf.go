@@ -5,6 +5,7 @@ import (
 	"reflect"
 	"time"
 
+	usercryto "github.com/chain-dev/bschain/crypto"
 	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/crypto"
 	"github.com/tendermint/tendermint/crypto/ed25519"
@@ -22,12 +23,14 @@ const (
 const (
 	ABCIPubKeyTypeEd25519   = "ed25519"
 	ABCIPubKeyTypeSecp256k1 = "secp256k1"
+	ABCIPubKeyTypeSM2       = "sm2"
 )
 
 // TODO: Make non-global by allowing for registration of more pubkey types
 var ABCIPubKeyTypesToAminoRoutes = map[string]string{
 	ABCIPubKeyTypeEd25519:   ed25519.PubKeyAminoRoute,
 	ABCIPubKeyTypeSecp256k1: secp256k1.PubKeyAminoRoute,
+	ABCIPubKeyTypeSM2:       usercryto.Sm2PubKeyAminoRoute, // Add user encrypto type
 }
 
 //-------------------------------------------------------
@@ -107,6 +110,11 @@ func (tm2pb) PubKey(pubKey crypto.PubKey) abci.PubKey {
 	case secp256k1.PubKeySecp256k1:
 		return abci.PubKey{
 			Type: ABCIPubKeyTypeSecp256k1,
+			Data: pk[:],
+		}
+	case usercryto.PubKeySm2: // Add user encrypto type
+		return abci.PubKey{
+			Type: ABCIPubKeyTypeSM2,
 			Data: pk[:],
 		}
 	default:
@@ -190,6 +198,7 @@ func (pb2tm) PubKey(pubKey abci.PubKey) (crypto.PubKey, error) {
 	// TODO: define these in crypto and use them
 	sizeEd := 32
 	sizeSecp := 33
+	sizeSm2 := 33
 	switch pubKey.Type {
 	case ABCIPubKeyTypeEd25519:
 		if len(pubKey.Data) != sizeEd {
@@ -203,6 +212,13 @@ func (pb2tm) PubKey(pubKey abci.PubKey) (crypto.PubKey, error) {
 			return nil, fmt.Errorf("Invalid size for PubKeyEd25519. Got %d, expected %d", len(pubKey.Data), sizeSecp)
 		}
 		var pk secp256k1.PubKeySecp256k1
+		copy(pk[:], pubKey.Data)
+		return pk, nil
+	case ABCIPubKeyTypeSM2:
+		if len(pubKey.Data) != sizeSm2 {
+			return nil, fmt.Errorf("Invalid size for Sm2. Got %d, expected %d", len(pubKey.Data), sizeSm2)
+		}
+		var pk usercryto.PubKeySm2
 		copy(pk[:], pubKey.Data)
 		return pk, nil
 	default:
