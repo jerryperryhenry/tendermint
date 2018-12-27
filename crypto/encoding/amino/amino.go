@@ -60,6 +60,10 @@ func RegisterAmino(cdc *amino.Codec) {
 		secp256k1.PrivKeyAminoRoute, nil)
 }
 
+func RegisterConcrete(o interface{}, name string, copts *amino.ConcreteOptions) {
+	cdc.RegisterConcrete(o, name, copts)
+}
+
 func PrivKeyFromBytes(privKeyBytes []byte) (privKey crypto.PrivKey, err error) {
 	err = cdc.UnmarshalBinaryBare(privKeyBytes, &privKey)
 	return
