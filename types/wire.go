@@ -1,6 +1,7 @@
 package types
 
 import (
+	usercryto "github.com/chain-dev/bschain/crypto"
 	amino "github.com/tendermint/go-amino"
 	"github.com/tendermint/tendermint/crypto/encoding/amino"
 )
@@ -13,6 +14,7 @@ func init() {
 
 func RegisterBlockAmino(cdc *amino.Codec) {
 	cryptoAmino.RegisterAmino(cdc)
+	usercryto.RegisterCodec(cdc)
 	RegisterEvidences(cdc)
 }
 

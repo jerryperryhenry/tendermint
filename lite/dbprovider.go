@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"strconv"
 
+	usercryto "github.com/chain-dev/bschain/crypto"
 	amino "github.com/tendermint/go-amino"
 	cryptoAmino "github.com/tendermint/tendermint/crypto/encoding/amino"
 	dbm "github.com/tendermint/tendermint/libs/db"
@@ -28,6 +29,7 @@ func NewDBProvider(label string, db dbm.DB) *DBProvider {
 
 	cdc := amino.NewCodec()
 	cryptoAmino.RegisterAmino(cdc)
+	usercryto.RegisterCodec(cdc)
 	dbp := &DBProvider{
 		logger: log.NewNopLogger(),
 		label:  label,

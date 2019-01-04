@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"time"
 
+	usercryto "github.com/chain-dev/bschain/crypto"
 	"github.com/tendermint/go-amino"
 	"github.com/tendermint/tendermint/crypto/ed25519"
 	cryptoAmino "github.com/tendermint/tendermint/crypto/encoding/amino"
@@ -145,6 +146,7 @@ func convertGenesis(cdc *amino.Codec, jsonBytes []byte) ([]byte, error) {
 func main() {
 	cdc := amino.NewCodec()
 	cryptoAmino.RegisterAmino(cdc)
+	usercryto.RegisterCodec(cdc)
 
 	args := os.Args[1:]
 	if len(args) != 1 {
