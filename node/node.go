@@ -163,6 +163,7 @@ func NewNode(config *cfg.Config,
 	if err != nil {
 		return nil, err
 	}
+
 	blockStore := bc.NewBlockStore(blockStoreDB)
 
 	// Get State
@@ -179,6 +180,7 @@ func NewNode(config *cfg.Config,
 		if err != nil {
 			return nil, err
 		}
+
 		// save genesis doc to prevent a certain class of user errors (e.g. when it
 		// was changed, accidentally or not). Also good for audit trail.
 		saveGenesisDoc(stateDB, genDoc)

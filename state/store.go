@@ -47,10 +47,12 @@ func LoadStateFromDBOrGenesisDoc(stateDB dbm.DB, genesisDoc *types.GenesisDoc) (
 	state := LoadState(stateDB)
 	if state.IsEmpty() {
 		var err error
+
 		state, err = MakeGenesisState(genesisDoc)
 		if err != nil {
 			return state, err
 		}
+
 		SaveState(stateDB, state)
 	}
 

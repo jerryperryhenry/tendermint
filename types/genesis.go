@@ -89,7 +89,6 @@ func (genDoc *GenesisDoc) ValidateAndComplete() error {
 			genDoc.Validators[i].Address = v.PubKey.Address()
 		}
 	}
-
 	if genDoc.GenesisTime.IsZero() {
 		genDoc.GenesisTime = tmtime.Now()
 	}
