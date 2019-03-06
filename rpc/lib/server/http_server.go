@@ -111,6 +111,10 @@ func WriteRPCResponseHTTP(w http.ResponseWriter, res types.RPCResponse) {
 // HTTP 500 error response.
 func RecoverAndLogHandler(handler http.Handler, logger log.Logger) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")             
+		w.Header().Add("Access-Control-Allow-Headers", "Content-Type") 
+		w.Header().Add("Access-Control-Allow-Headers","x-requested-with") 
+		w.Header().Set("content-type", "application/json")   
 		// Wrap the ResponseWriter to remember the status
 		rww := &ResponseWriterWrapper{-1, w}
 		begin := time.Now()
